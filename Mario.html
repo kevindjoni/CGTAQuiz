@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mario (Kevin Djoni)</title>
+  <script type="text/javascript" src="babylon.custom.js"></script>
+  <script type="text/javascript" src="material.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <canvas id="renderCanvas"></canvas>
+  <script>
+  var canvas, engine, scene, camera;
+  var isMoving = null;
+  var collision = 0;
+  document.addEventListener("DOMContentLoaded", function()
+  {
+    canvas = document.getElementById("renderCanvas");
+
+    engine = new BABYLON.Engine(canvas, true);
+
+    scene = new BABYLON.Scene(engine);
+    gravity = new BABYLON.Vector3(0, -9.81, 0);
+    physicsEngine = new BABYLON.CannonJSPlugin();
+
+    scene.enablePhysics(gravity, physicsEngine);
+
+    // camera = new BABYLON.FreeCamera("camera", new
+    // BABYLON.Vector3(0, 4, -10), scene)
+
+    camera = new BABYLON.ArcRotateCamera("camera", 0, 5.5, 120, new
+    BABYLON.Vector3(0, 0, 0), scene)
+
+    // camera.setPosition(new BABYLON.Vector3(0, 30, 60));
+    // camera.attachControl(canvas, true);
+
+    camera.setTarget(new BABYLON.Vector3(0, 2.5, 0));
+    camera.attachControl(canvas);
+
+    var light = new BABYLON.HemisphericLight("hLight",
+    new BABYLON.Vector3(0, 8, 0), scene);
+
+    var mat = createMat(scene);
+    var mat2 = createMat2(scene);
+
+    var groundMat = CreateGround(scene);
+
+    var ground = new BABYLON.Mesh.CreateGround("ground", 60, 60, 1, scene);
+    ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor,
+      {mass: 0, restitution: 0.2, friction: 0.2}, scene);
+    ground.material = groundMat;
+
+    var box = new BABYLON.Mesh.CreateBox("box", 6.5, scene);
+
+    box.position = new BABYLON.Vector3(-20, 10, 0);
+    box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor,
+    {mass: 1, restitution: 0.5, friction: 0.2}, scene);
+    box.material = mat;
+
+    var box2 = new BABYLON.Mesh.CreateBox("box2", 6.5, scene);
+    box2.position = new BABYLON.Vector3(15, 10, 0);
+    box2.physicsImpostor = new BABYLON.PhysicsImpostor(box2, BABYLON.PhysicsImpostor.BoxImpostor,
+    {mass: 1, restitution: 0.5, friction: 0.2}, scene);
+    box2.material = mat2;
+
+    box.physicsImpostor.registerOnPhysicsCollide(box2.physicsImpostor,
+    function(main, collided)
+    {
+      if(collision == 0)
+      {
+        box.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
+
+        setTimeout(function()
+        {
+          collision = 1;
+        }, 1000);
+      }
+
+      else if (collision == 1)
+      {
+        box.setEnabled(false);
+      }
+    });
+
+    var t = 0;
+    var renderLoop = function()
+    {
+      scene.render();
+      t -= 0.01;
+      box2.position.z = 0 + Math.sin(t*5) * 10;
+    }
+
+    engine.runRenderLoop(renderLoop);
+    engine.runRenderLoop(function()
+    {
+      window.onkeydown = function(event)
+      {
+        //Left
+        if(event.keyCode == 37 || event.keyCode == 65)
+        {
+           box.position.z = box.position.z + 0.5;
+           // box.physicsImpostor.applyImpulse(new BABYLON.Vector3(1, 0, 0),
+           // box.getAbsolutePosition());
+        }
+
+        //Up
+        else if(event.keyCode == 38 || event.keyCode == 87)
+        {
+           box.position.x = box.position.x + 0.5;
+           // box.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 1, 0),
+           // box.getAbsolutePosition());
+        }
+
+        //Right
+        else if(event.keyCode == 39 || event.keyCode == 68)
+        {
+          box.position.z = box.position.z - 0.5;
+          // box.physicsImpostor.applyImpulse(new BABYLON.Vector3(-1, 0, 0),
+          // box.getAbsolutePosition());
+        }
+
+        //Down
+        else if(event.keyCode == 40 || event.keyCode == 83)
+        {
+          box.position.x = box.position.x - 0.5;
+          // box.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, -1, 0),
+          // box.getAbsolutePosition());
+        }
+      }
+      scene.render();
+    });
+  });
+</script>
+</body>
+</html>
