@@ -36,7 +36,7 @@ function createMat3(scene)
 {
  var mat3 = new BABYLON.StandardMaterial("material3", scene);
 
- mat3.diffuseColor = new BABYLON.Color3(10, 0, 0);
+ mat3.diffuseColor = new BABYLON.Color3(255, 255, 255);
  mat3.specularColor = new BABYLON.Color3(0, 1, 0);
  mat3.specularPower = 105;
  mat3.ambientColor = new BABYLON.Color3(0.23, 0.98, 0.53);

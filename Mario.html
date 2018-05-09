@@ -32,11 +32,14 @@
     camera = new BABYLON.ArcRotateCamera("camera", 0, 5.5, 120, new
     BABYLON.Vector3(0, 0, 0), scene)
 
+    // camera = new BABYLON.FollowCamera("camera", new
+    // BABYLON.Vector3(0, 4, -10), scene)
+
     // camera.setPosition(new BABYLON.Vector3(0, 30, 60));
     // camera.attachControl(canvas, true);
 
-    camera.setTarget(new BABYLON.Vector3(0, 2.5, 0));
-    camera.attachControl(canvas);
+    // camera.setTarget(new BABYLON.Vector3(0, 2.5, 0));
+    // camera.attachControl(canvas);
 
     var light = new BABYLON.HemisphericLight("hLight",
     new BABYLON.Vector3(0, 8, 0), scene);
@@ -47,28 +50,31 @@
 
     var groundMat = CreateGround(scene);
 
-    var ground = new BABYLON.Mesh.CreateGround("ground", 60, 60, 1, scene);
+    var ground = new BABYLON.Mesh.CreateGround("ground", 80, 80, 1, scene);
     ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor,
       {mass: 0, restitution: 0.2, friction: 0.2}, scene);
     ground.material = groundMat;
 
-    var box = new BABYLON.Mesh.CreateBox("box", 6.5, scene);
-    box.position = new BABYLON.Vector3(-20, 10, 0);
+    var box = new BABYLON.Mesh.CreateBox("box", 7, scene);
+    box.position = new BABYLON.Vector3(-30, 10, 0);
     box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor,
     {mass: 1, restitution: 0.5, friction: 0.2}, scene);
     box.material = mat;
 
     var box2 = new BABYLON.Mesh.CreateBox("box2", 6.5, scene);
-    box2.position = new BABYLON.Vector3(15, 10, 0);
+    box2.position = new BABYLON.Vector3(0, 10, 0);
     box2.physicsImpostor = new BABYLON.PhysicsImpostor(box2, BABYLON.PhysicsImpostor.BoxImpostor,
     {mass: 1, restitution: 0.5, friction: 0.2}, scene);
     box2.material = mat2;
 
     var box3 = new BABYLON.Mesh.CreateBox("box3", 6.5, scene);
-    box3.position = new BABYLON.Vector3(-2.5, 10, 0);
+    box3.position = new BABYLON.Vector3(-15, 10, 0);
     box3.physicsImpostor = new BABYLON.PhysicsImpostor(box3, BABYLON.PhysicsImpostor.BoxImpostor,
     {mass: 1, restitution: 0.5, friction: 0.2}, scene);
-    box2.material = mat2;
+    box3.material = mat3;
+
+    camera.target = box;
+    camera.attachControl(canvas);
 
     box.physicsImpostor.registerOnPhysicsCollide(box2.physicsImpostor,
     function(main, collided)
@@ -113,8 +119,8 @@
     {
       scene.render();
       t -= 0.01;
-      box2.position.z = 0 + Math.sin(t*3.5) * 20;
-      box3.position.z = 0 + Math.sin(t*2.5) * 20;
+      box2.position.z = 0 + Math.sin(t*3.5) * 30;
+      box3.position.z = 0 + Math.sin(t*2.5) * 30;
     }
 
     engine.runRenderLoop(renderLoop);
