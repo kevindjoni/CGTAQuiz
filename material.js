@@ -32,6 +32,21 @@ function createMat2(scene)
  return mat2;
 }
 
+function createMat3(scene)
+{
+ var mat3 = new BABYLON.StandardMaterial("material3", scene);
+
+ mat3.diffuseColor = new BABYLON.Color3(10, 0, 0);
+ mat3.specularColor = new BABYLON.Color3(0, 1, 0);
+ mat3.specularPower = 105;
+ mat3.ambientColor = new BABYLON.Color3(0.23, 0.98, 0.53);
+
+ //Transparency
+ mat3.alpha = 0.95;
+
+ return mat3;
+}
+
 function CreateGround(scene)
 {
  var mat = new BABYLON.StandardMaterial("groundMaterial", scene);

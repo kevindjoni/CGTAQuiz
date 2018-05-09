@@ -43,6 +43,7 @@
 
     var mat = createMat(scene);
     var mat2 = createMat2(scene);
+    var mat3 = createMat3(scene);
 
     var groundMat = CreateGround(scene);
 
@@ -52,7 +53,6 @@
     ground.material = groundMat;
 
     var box = new BABYLON.Mesh.CreateBox("box", 6.5, scene);
-
     box.position = new BABYLON.Vector3(-20, 10, 0);
     box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor,
     {mass: 1, restitution: 0.5, friction: 0.2}, scene);
@@ -64,7 +64,32 @@
     {mass: 1, restitution: 0.5, friction: 0.2}, scene);
     box2.material = mat2;
 
+    var box3 = new BABYLON.Mesh.CreateBox("box3", 6.5, scene);
+    box3.position = new BABYLON.Vector3(-2.5, 10, 0);
+    box3.physicsImpostor = new BABYLON.PhysicsImpostor(box3, BABYLON.PhysicsImpostor.BoxImpostor,
+    {mass: 1, restitution: 0.5, friction: 0.2}, scene);
+    box2.material = mat2;
+
     box.physicsImpostor.registerOnPhysicsCollide(box2.physicsImpostor,
+    function(main, collided)
+    {
+      if(collision == 0)
+      {
+        box.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
+
+        setTimeout(function()
+        {
+          collision = 1;
+        }, 1000);
+      }
+
+      else if (collision == 1)
+      {
+        box.setEnabled(false);
+      }
+    });
+
+    box.physicsImpostor.registerOnPhysicsCollide(box3.physicsImpostor,
     function(main, collided)
     {
       if(collision == 0)
@@ -88,7 +113,8 @@
     {
       scene.render();
       t -= 0.01;
-      box2.position.z = 0 + Math.sin(t*5) * 10;
+      box2.position.z = 0 + Math.sin(t*3.5) * 20;
+      box3.position.z = 0 + Math.sin(t*2.5) * 20;
     }
 
     engine.runRenderLoop(renderLoop);
